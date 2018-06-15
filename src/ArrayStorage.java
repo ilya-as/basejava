@@ -15,7 +15,7 @@ public class ArrayStorage {
 
     void save(Resume resume) {
         storage[size] = resume;
-        size ++;
+        size++;
     }
 
     Resume get(String uuid) {
@@ -35,10 +35,8 @@ public class ArrayStorage {
 				storage[index] = storage[j];
 			}
 		}
-		Resume[] copy = new Resume[10000];
 		if (index >= 0) {
-			System.arraycopy(storage, 0, copy, 0, size--);
-			storage = copy;
+		    System.arraycopy(storage, 0, storage, 0, size--);
 		}
     }
 
@@ -46,8 +44,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        Resume[] copy = Arrays.copyOf(storage, size);
-        return copy;
+        return  Arrays.copyOf(storage, size);
     }
 
     int size() {
