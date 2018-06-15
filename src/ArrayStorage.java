@@ -28,16 +28,12 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-   	    int index = -1;
-		for (int j = 0; j < size; j++) {
-			if (!storage[j].uuid.equals(uuid)) {
-				index++;
-				storage[index] = storage[j];
-			}
+   	   for (int i = 0; i < size; i++) {
+		if (storage[i].uuid.equals(uuid)) {
+		    System.arraycopy(storage, i+1, storage, i, size-i);
+		    size--;
 		}
-		if (index >= 0) {
-		    System.arraycopy(storage, 0, storage, 0, size--);
-		}
+	    }
     }
 
     /**
