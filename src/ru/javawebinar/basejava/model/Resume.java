@@ -1,9 +1,9 @@
 package ru.javawebinar.basejava.model;
 
-public class Resume implements Comparable<Resume>{
+public class Resume implements Comparable<Resume> {
 
     // Unique identifier
-    private String uuid;
+    public String uuid;
 
     public String getUuid() {
         return uuid;
@@ -37,4 +37,5 @@ public class Resume implements Comparable<Resume>{
     public int compareTo(Resume o) {
         return uuid.compareTo(o.uuid);
     }
+
 }

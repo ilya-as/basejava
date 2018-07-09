@@ -53,14 +53,12 @@ public abstract class AbstractArrayStorage implements Storage {
         } else if (size >= STORAGE_LIMIT) {
             System.out.println("Storage overflow");
         } else {
-            insert(r);
+            insert(r, index);
+            size++;
         }
     }
 
-    public void insert(Resume r) {
-        storage[size] = r;
-        size++;
-    }
+    protected abstract void insert(Resume r, int index);
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
