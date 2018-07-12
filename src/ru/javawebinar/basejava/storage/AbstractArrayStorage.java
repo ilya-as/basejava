@@ -4,9 +4,6 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
-/**
- * Array based storage for Resumes
- */
 public abstract class AbstractArrayStorage implements Storage {
 
     protected static final int STORAGE_LIMIT = 10000;
@@ -63,13 +60,13 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index < 0) {
             System.out.println("Resume " + uuid + " not exist");
         } else {
-            removeElemet(index);
+            removeElement(index);
             storage[size - 1] = null;
             size--;
         }
     }
 
-    protected abstract void removeElemet(int index);
+    protected abstract void removeElement(int index);
 
     protected abstract int getIndex(String uuid);
 

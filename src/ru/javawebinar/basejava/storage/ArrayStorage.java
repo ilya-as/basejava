@@ -4,9 +4,6 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-/**
- * Array based storage for Resumes
- */
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
@@ -25,7 +22,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public void removeElemet(int index) {
+    public void removeElement(int index) {
         storage[index] = storage[size - 1];
     }
 }
