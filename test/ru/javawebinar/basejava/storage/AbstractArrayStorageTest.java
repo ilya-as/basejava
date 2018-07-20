@@ -8,7 +8,7 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-public class AbstractArrayStorageTest {
+public abstract class AbstractArrayStorageTest {
 
     private Storage storage;
 
@@ -43,11 +43,19 @@ public class AbstractArrayStorageTest {
     }
 
     @Test
+    public void get() throws Exception {
+        Assert.assertEquals(RESUME_1, storage.get(UUID_1));
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void getNotExist() throws Exception {
+        storage.get("dummy");
+    }
+
+    @Test
     public void getAll() throws Exception {
-        Resume storageTest[] = storage.getAll();
-        Assert.assertEquals(storageTest[0], RESUME_1);
-        Assert.assertEquals(storageTest[1], RESUME_2);
-        Assert.assertEquals(storageTest[2], RESUME_3);
+        Resume[] storageTest= {RESUME_1,RESUME_2,RESUME_3};
+        Assert.assertArrayEquals(storageTest, storage.getAll());
     }
 
     @Test
@@ -57,9 +65,10 @@ public class AbstractArrayStorageTest {
         Assert.assertEquals(resume, storage.get(UUID_1));
     }
 
-    @Test
-    public void get() throws Exception {
-        Assert.assertEquals(RESUME_1, storage.get(UUID_1));
+    @Test(expected = NotExistStorageException.class)
+    public void updateNotExist() throws Exception {
+        Resume resume = new Resume("uuid4");
+        storage.update(resume);
     }
 
     @Test
@@ -94,7 +103,8 @@ public class AbstractArrayStorageTest {
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void getNotExist() throws Exception {
-        storage.get("dummy");
+    public void deleteNotExist() throws Exception {
+        storage.delete("uuid4");
     }
+
 }
