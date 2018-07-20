@@ -16,7 +16,7 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
     public void insert(Resume resume, int index) {
-        storage[index] = resume;
+        storage[size] = resume;
     }
 
     @Override
