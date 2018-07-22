@@ -6,43 +6,45 @@ import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
+    @Override
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else insert(resume, index);
+        int index = getExistedIndex(resume.getUuid());
+        insert(resume, index);
     }
 
+    @Override
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
+        int index = getExistedIndex(uuid);
         return getElement(index);
     }
 
+    @Override
     public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else
-            saveElement(resume, index);
+        int index = getNotExistedIndex(resume.getUuid());
+        saveElement(resume, index);
     }
 
+    @Override
     public void delete(String uuid) {
+        int index = getExistedIndex(uuid);
+        clearElement(index);
+    }
+
+    protected int getExistedIndex(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
-        } else {
-            clearElement(index);
         }
+        return index;
     }
 
-    public abstract int size();
-
-    public abstract void clear();
-
-    public abstract Resume[] getAll();
+    protected int getNotExistedIndex(String uuid) {
+        int index = getIndex(uuid);
+        if (index >= 0) {
+            throw new ExistStorageException(uuid);
+        }
+        return index;
+    }
 
     protected abstract void clearElement(int index);
 

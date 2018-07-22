@@ -11,6 +11,6 @@ public class MainReflection {
         Resume resume = new Resume();
         Method method = resume.getClass().getMethod("toString");
         System.out.println(method.invoke(resume));
-        System.out.println(resume.toString());
+        System.out.println(resume);
     }
 }
