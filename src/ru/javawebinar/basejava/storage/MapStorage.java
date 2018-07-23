@@ -23,24 +23,30 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public void clearElement(int index) {
+    public void clearElement(Object index) {
     }
 
     @Override
-    protected int getIndex(String uuid) {
+    protected Integer getKey(String uuid) {
         return -1;
     }
 
-    @Override
-    public void insert(Resume resume, int index) {
-    }
 
     @Override
-    public Resume getElement(int index) {
+    public Resume getElement(Object index) {
         return new Resume();
     }
 
     @Override
-    public void saveElement(Resume resume, int index) {
+    public void saveElement(Resume resume, Object index) {
+    }
+
+    @Override
+    protected void updateElement(Resume resume, Object index) {
+    }
+
+    @Override
+    protected boolean existElement(Object key) {
+        return false;
     }
 }

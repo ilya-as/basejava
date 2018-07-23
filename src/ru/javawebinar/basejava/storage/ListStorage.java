@@ -25,12 +25,12 @@ public class ListStorage extends ArrayStorage {
     }
 
     @Override
-    public void clearElement(int index) {
-        storageList.remove(index);
+    public void clearElement(Object index) {
+        storageList.remove(((Integer) index).intValue());
     }
 
     @Override
-    protected int getIndex(String uuid) {
+    protected Integer getKey(String uuid) {
         for (int i = 0; i < storageList.size(); i++) {
             if (storageList.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -40,17 +40,17 @@ public class ListStorage extends ArrayStorage {
     }
 
     @Override
-    public void insert(Resume resume, int index) {
-        storageList.set(index, resume);
+    public void updateElement(Resume resume, Object index) {
+        storageList.set((Integer) index, resume);
     }
 
     @Override
-    public Resume getElement(int index) {
-        return storageList.get(index);
+    public Resume getElement(Object index) {
+        return storageList.get((Integer) index);
     }
 
     @Override
-    public void saveElement(Resume resume, int index) {
+    public void saveElement(Resume resume, Object index) {
         storageList.add(resume);
     }
 }
