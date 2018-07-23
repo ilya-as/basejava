@@ -8,29 +8,29 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        int index = getExistedIndex(resume.getUuid());
+        int index = getExisted(resume.getUuid());
         insert(resume, index);
     }
 
     @Override
     public Resume get(String uuid) {
-        int index = getExistedIndex(uuid);
+        int index = getExisted(uuid);
         return getElement(index);
     }
 
     @Override
     public void save(Resume resume) {
-        int index = getNotExistedIndex(resume.getUuid());
+        int index = getNotExisted(resume.getUuid());
         saveElement(resume, index);
     }
 
     @Override
     public void delete(String uuid) {
-        int index = getExistedIndex(uuid);
+        int index = getExisted(uuid);
         clearElement(index);
     }
 
-    protected int getExistedIndex(String uuid) {
+    protected int getExisted(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
@@ -38,7 +38,7 @@ public abstract class AbstractStorage implements Storage {
         return index;
     }
 
-    protected int getNotExistedIndex(String uuid) {
+    protected int getNotExisted(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {
             throw new ExistStorageException(uuid);
