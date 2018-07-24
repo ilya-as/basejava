@@ -20,8 +20,8 @@ public class ListStorage extends ArrayStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return storageList.toArray(new Resume[0]);
+    public List<Resume> getAll() {
+        return new ArrayList<>(storageList);
     }
 
     @Override
