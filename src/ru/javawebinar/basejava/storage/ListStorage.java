@@ -5,7 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage extends ArrayStorage {
+public class ListStorage extends AbstractStorage {
 
     protected List<Resume> storageList = new ArrayList<>();
 
@@ -52,5 +52,10 @@ public class ListStorage extends ArrayStorage {
     @Override
     public void saveElement(Resume resume, Object index) {
         storageList.add(resume);
+    }
+
+    @Override
+    protected boolean isExistElement(Object key) {
+        return ((Integer) key) != -1;
     }
 }
