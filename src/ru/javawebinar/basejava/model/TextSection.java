@@ -6,6 +6,7 @@ public class TextSection extends Section {
     private String description;
 
     public TextSection(String description) {
+        Objects.requireNonNull(description, "description must not be null");
         this.description = description;
     }
 

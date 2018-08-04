@@ -7,6 +7,7 @@ public class ExperienceSection extends Section {
     private List<Experience> experiencesList;
 
     public ExperienceSection(List<Experience> experiencesList) {
+        Objects.requireNonNull(experiencesList, "experiencesList must not be null");
         this.experiencesList = experiencesList;
     }
 

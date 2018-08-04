@@ -8,12 +8,17 @@ public class Experience {
     private LocalDate dataTo;
     private String description;
     private String position;
+    private Link homePage;
 
-    public Experience(LocalDate dataFrom, LocalDate dataTo, String description, String position) {
+    public Experience(String name,String url,LocalDate dataFrom, LocalDate dataTo, String description, String position) {
+        Objects.requireNonNull(dataFrom, "dataFrom must not be null");
+        Objects.requireNonNull(dataTo, "dataTo must not be null");
+        Objects.requireNonNull(position, "position must not be null");
         this.dataFrom = dataFrom;
         this.dataTo = dataTo;
         this.description = description;
         this.position = position;
+        this.homePage = new Link(name,url);
     }
 
     @Override
@@ -40,6 +45,7 @@ public class Experience {
                 ", dataTo=" + dataTo +
                 ", description='" + description + '\'' +
                 ", position='" + position + '\'' +
+                ", homePage=" + homePage +
                 '}';
     }
 }
