@@ -4,10 +4,15 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+<<<<<<< HEAD
 import ru.javawebinar.basejava.model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+=======
+import ru.javawebinar.basejava.model.Resume;
+
+>>>>>>> f246883ef6979c84b82e1f01c6bb4e13acda2afd
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +26,7 @@ public class AbstractStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
+<<<<<<< HEAD
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
     private static final Resume RESUME_3;
@@ -73,6 +79,12 @@ public class AbstractStorageTest {
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("good in job"));
         RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));
     }
+=======
+    private static final Resume RESUME_1 = new Resume(UUID_1, "ivanov1");
+    private static final Resume RESUME_2 = new Resume(UUID_2, "ivanov2");
+    private static final Resume RESUME_3 = new Resume(UUID_3, "ivanov3");
+    private static final Resume RESUME_4 = new Resume(UUID_4, "ivanov4");
+>>>>>>> f246883ef6979c84b82e1f01c6bb4e13acda2afd
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -87,6 +99,7 @@ public class AbstractStorageTest {
     }
 
     @Test
+<<<<<<< HEAD
     public void getContact() {
         assertEquals("gkislin.github.ru", RESUME_1.getContact(ContactType.GITHUB));
     }
@@ -97,6 +110,8 @@ public class AbstractStorageTest {
     }
 
     @Test
+=======
+>>>>>>> f246883ef6979c84b82e1f01c6bb4e13acda2afd
     public void size() {
         assertEquals(3, storage.size());
     }
@@ -157,4 +172,9 @@ public class AbstractStorageTest {
         storage.delete(UUID_4);
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+
+>>>>>>> f246883ef6979c84b82e1f01c6bb4e13acda2afd
