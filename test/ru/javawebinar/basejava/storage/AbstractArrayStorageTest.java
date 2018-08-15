@@ -22,9 +22,6 @@ public class AbstractArrayStorageTest extends AbstractStorageTest {
         }
         storage.save(new Resume("fullName"));
     }
+}
 
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> f246883ef6979c84b82e1f01c6bb4e13acda2afd
+
