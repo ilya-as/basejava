@@ -5,6 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,21 +26,17 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File files[] = directory.listFiles();
-        for (File file : files) {
-            deleteFile(file);
-        }
-    }
-
-    public void deleteFile(File file){
-        if(file.delete()==false){
-            throw new StorageException("Delete error", file.getName());
+        if (files != null) {
+            for (File file : files) {
+                clearElement(file);
+            }
         }
     }
 
     @Override
     public int size() {
-        if (directory == null) {
-            return 0;
+        if (directory.list() == null) {
+            throw new StorageException("Read files error", null);
         }
         return directory.list().length;
     }
@@ -88,11 +85,18 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void clearElement(File file) {
-
+        if (!file.delete()) {
+            throw new StorageException("Delete error", file.getName());
+        }
     }
 
     @Override
     protected List<Resume> getAll() {
-        return null;
+        List<Resume> resumeList = new ArrayList<>(size());
+        File files[] = directory.listFiles();
+        for (File file : files) {
+            resumeList.add(getElement(file));
+        }
+        return resumeList;
     }
 }
