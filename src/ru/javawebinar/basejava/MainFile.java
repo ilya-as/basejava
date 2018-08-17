@@ -13,11 +13,13 @@ public class MainFile {
         if (path.isFile()) {
             System.out.println(path.getName());
         } else {
-            System.out.println(path.getName());
             File files[] = path.listFiles();
-            for (File dirOrFile : files) {
-                displayAll(dirOrFile);
+            for (File file : files) {
+                if (file.isFile()) {
+                    displayAll(file);
+                }
             }
         }
     }
 }
+

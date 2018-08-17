@@ -26,17 +26,18 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File files[] = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                clearElement(file);
-            }
+        if (files == null) {
+            throw new StorageException("directory is empty", null);
+        }
+        for (File file : files) {
+            clearElement(file);
         }
     }
 
     @Override
     public int size() {
         if (directory.list() == null) {
-            throw new StorageException("Read files error", null);
+            throw new StorageException("Read directory error", null);
         }
         return directory.list().length;
     }
@@ -64,10 +65,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void saveElement(Resume r, File file) {
         try {
             file.createNewFile();
-            doWrite(r, file);
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
+        updateElement(r, file);
     }
 
     protected abstract void doWrite(Resume r, File file) throws IOException;
@@ -94,6 +95,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> getAll() {
         List<Resume> resumeList = new ArrayList<>(size());
         File files[] = directory.listFiles();
+        if (directory.list() == null) {
+            throw new StorageException("Read directory error", null);
+        }
         for (File file : files) {
             resumeList.add(getElement(file));
         }
