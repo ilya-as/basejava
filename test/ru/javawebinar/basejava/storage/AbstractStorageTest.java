@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.model.*;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 public class AbstractStorageTest {
 
     public Storage storage;
+    protected static final File STORAGE_DIR = new File("C:\\projects\\storage");
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
