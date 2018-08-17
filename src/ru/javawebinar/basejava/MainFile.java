@@ -15,10 +15,8 @@ public class MainFile {
         } else {
             File files[] = path.listFiles();
             for (File file : files) {
-                if (file.isFile()) {
                     displayAll(file);
                 }
-            }
         }
     }
 }
