@@ -5,7 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStorage implements ReaderWriterObject {
+public class ObjectStreamPathStorage implements ReaderWriterObject {
 
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
