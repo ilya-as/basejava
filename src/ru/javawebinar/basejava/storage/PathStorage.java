@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
+import ru.javawebinar.basejava.iotools.ReaderWriterObject;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.*;
@@ -11,16 +12,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public abstract class PathStorage extends AbstractStorage<Path> {
     private Path directory;
     private ReaderWriterObject readerWriterObject;
 
-    protected AbstractPathStorage(Path directory, ReaderWriterObject readerWriterObject) {
-        this.directory = directory;
-        this.readerWriterObject = readerWriterObject;
-    }
-
-    protected AbstractPathStorage(String dir, ReaderWriterObject readerWriterObject) {
+    protected PathStorage(String dir, ReaderWriterObject readerWriterObject) {
         directory = Paths.get(dir);
         this.readerWriterObject = readerWriterObject;
         Objects.requireNonNull(dir, "directory must not be null");

@@ -9,7 +9,8 @@ public class MainFile {
         System.out.println("Files list");
         displayAllFiles(file);
         System.out.println("Directory list");
-        displayAllDirectory(file);
+        String directoryLevel = " ";
+        displayAllDirectory(file, directoryLevel);
     }
 
     public static void displayAllFiles(File path) {
@@ -23,15 +24,16 @@ public class MainFile {
         }
     }
 
-    public static void displayAllDirectory(File path) {
+    public static void displayAllDirectory(File path, String directoryLevel) {
         File files[] = path.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-                System.out.println(file.getName());
-                displayAllDirectory(file);
+                System.out.println(directoryLevel + file.getName());
+                displayAllDirectory(file, directoryLevel + " ");
             }
         }
     }
 }
+
 
 

@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
+import ru.javawebinar.basejava.iotools.ReaderWriterObject;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.*;
@@ -8,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public abstract class FileStorage extends AbstractStorage<File> {
     private File directory;
     private ReaderWriterObject readerWriterObject;
 
-    protected AbstractFileStorage(File directory, ReaderWriterObject readerWriterObject) {
+    protected FileStorage(File directory, ReaderWriterObject readerWriterObject) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
