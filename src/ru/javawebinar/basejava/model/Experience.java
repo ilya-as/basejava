@@ -1,17 +1,28 @@
 package ru.javawebinar.basejava.model;
 
+import ru.javawebinar.basejava.util.LocalDateAdapter;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Experience implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate dataFrom;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate dataTo;
     private String description;
     private String position;
     private Link homePage;
+
+    public Experience() {
+    }
 
     public Experience(String name, String url, LocalDate dataFrom, LocalDate dataTo, String description, String position) {
         Objects.requireNonNull(dataFrom, "dataFrom must not be null");

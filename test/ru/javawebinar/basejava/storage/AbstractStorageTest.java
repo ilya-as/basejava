@@ -71,12 +71,12 @@ public class AbstractStorageTest {
         RESUME_1.addContact(ContactType.GITHUB, "gkislin.github.ru");
         RESUME_1.addContact(ContactType.HOMEPAGE, "javaops.ru");
         RESUME_1.addContact(ContactType.STACKOVERFLOW, "gkislin.stackoverflow.ru");
-        RESUME_1.addSection(SectionType.EXPERIENCE, experienceSection);
+       /* RESUME_1.addSection(SectionType.EXPERIENCE, experienceSection);
         RESUME_1.addSection(SectionType.EDUCATION, educationSection);
         RESUME_1.addSection(SectionType.ACHIEVEMENT, listAchievement);
         RESUME_1.addSection(SectionType.QUALIFICATIONS, listQualifications);
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("good in job"));
-        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));
+        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));*/
     }
 
     public AbstractStorageTest(Storage storage) {

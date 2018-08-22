@@ -2,11 +2,17 @@ package ru.javawebinar.basejava.model;
 
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ListSection extends Section {
 
     private List<String> descriptions;
     private static final long serialVersionUID = 1L;
+
+    public ListSection() {
+    }
 
     public ListSection(List<String> descriptions) {
         Objects.requireNonNull(descriptions, "descriptions must not be null");

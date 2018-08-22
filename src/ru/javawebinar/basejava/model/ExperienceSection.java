@@ -2,10 +2,16 @@ package ru.javawebinar.basejava.model;
 
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ExperienceSection extends Section {
     private static final long serialVersionUID = 1L;
     private List<Experience> experiencesList;
+
+    public ExperienceSection() {
+    }
 
     public ExperienceSection(List<Experience> experiencesList) {
         Objects.requireNonNull(experiencesList, "experiencesList must not be null");
@@ -26,7 +32,6 @@ public class ExperienceSection extends Section {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(experiencesList);
     }
 

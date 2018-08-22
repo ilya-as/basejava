@@ -1,7 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
-import ru.javawebinar.basejava.iotools.ReaderWriterObject;
+import ru.javawebinar.basejava.storage.serializer.ReaderWriterObject;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.*;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class PathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
     private ReaderWriterObject readerWriterObject;
 
