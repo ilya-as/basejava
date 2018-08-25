@@ -12,7 +12,6 @@ import org.junit.runners.Suite;
         MapStorageResumeTest.class,
         ObjectStreamStorageTest.class,
         ObjectStreamPathStorageTest.class,
-        // XmlPathStorageTest.class,
         JsonPathStorageTest.class,
         DataPathStorageTest.class
 })
