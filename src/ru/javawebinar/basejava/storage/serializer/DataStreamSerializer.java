@@ -4,6 +4,8 @@ import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class DataStreamSerializer implements ReaderWriterObject {
@@ -20,17 +22,18 @@ public class DataStreamSerializer implements ReaderWriterObject {
                 dos.writeUTF(entry.getValue());
             }
             Map<SectionType, Section> sections = r.getSections();
+            dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
                 SectionType sectionType = entry.getKey();
                 Section section = entry.getValue();
-                dos.writeUTF(entry.getKey().name());
+                dos.writeUTF(sectionType.name());
                 switch (sectionType) {
                     case EXPERIENCE:
                     case EDUCATION:
                         dos.writeInt(((ExperienceSection) section).getexperiencesList().size());
                         for (Experience experience : ((ExperienceSection) section).getexperiencesList()) {
-                            writeDate(dos,experience.getDataFrom());
-                            writeDate(dos,experience.getDataTo());
+                            writeDate(dos, experience.getDataFrom());
+                            writeDate(dos, experience.getDataTo());
                             dos.writeUTF(experience.getDescription());
                             dos.writeUTF(experience.getPosition());
                             dos.writeUTF(experience.getHomePage().getUrl());
@@ -43,6 +46,7 @@ public class DataStreamSerializer implements ReaderWriterObject {
                         for (String description : ((ListSection) section).getDescriptions()) {
                             dos.writeUTF(description);
                         }
+                        break;
                     case PERSONAL:
                     case OBJECTIVE:
                         dos.writeUTF(((TextSection) section).getDescription());
@@ -55,10 +59,11 @@ public class DataStreamSerializer implements ReaderWriterObject {
     private void writeDate(DataOutputStream dos, LocalDate ld) throws IOException {
         dos.writeInt(ld.getYear());
         dos.writeInt(ld.getMonth().getValue());
+        dos.writeInt(ld.getDayOfMonth());
     }
 
     private LocalDate readDate(DataInputStream dis) throws IOException {
-        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+        return LocalDate.of(dis.readInt(), dis.readInt(), dis.readInt());
     }
 
     @Override
@@ -71,8 +76,50 @@ public class DataStreamSerializer implements ReaderWriterObject {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            // TODO implements sections
+            int sizeSection = dis.readInt();
+            for (int i = 0; i < sizeSection; i++) {
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                resume.addSection(sectionType, readSection(dis, sectionType));
+            }
             return resume;
         }
+    }
+
+    private Section readSection(DataInputStream dis, SectionType sectionType) throws IOException {
+        switch (sectionType) {
+            case EXPERIENCE:
+            case EDUCATION:
+                return new ExperienceSection(readExperienceList(dis));
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                return new ListSection(readListSection(dis));
+            case PERSONAL:
+            case OBJECTIVE:
+                return new TextSection(dis.readUTF());
+            default:
+                throw new IOException();
+        }
+    }
+
+    private List<Experience> readExperienceList(DataInputStream dis) throws IOException {
+        int size = dis.readInt();
+        List<Experience> experiencesList = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            experiencesList.add(readExperience(dis));
+        }
+        return experiencesList;
+    }
+
+    private List<String> readListSection(DataInputStream dis) throws IOException {
+        int size = dis.readInt();
+        List<String> listSection = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            listSection.add(dis.readUTF());
+        }
+        return listSection;
+    }
+
+    private Experience readExperience(DataInputStream dis) throws IOException {
+        return new Experience(readDate(dis), readDate(dis), dis.readUTF(), dis.readUTF(), dis.readUTF(), dis.readUTF());
     }
 }

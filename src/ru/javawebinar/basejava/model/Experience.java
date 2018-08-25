@@ -2,12 +2,12 @@ package ru.javawebinar.basejava.model;
 
 import ru.javawebinar.basejava.util.LocalDateAdapter;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Experience implements Serializable {
@@ -24,7 +24,27 @@ public class Experience implements Serializable {
     public Experience() {
     }
 
-    public Experience(String name, String url, LocalDate dataFrom, LocalDate dataTo, String description, String position) {
+    public LocalDate getDataFrom() {
+        return dataFrom;
+    }
+
+    public LocalDate getDataTo() {
+        return dataTo;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public Experience(LocalDate dataFrom, LocalDate dataTo, String description, String position, String url, String name) {
         Objects.requireNonNull(dataFrom, "dataFrom must not be null");
         Objects.requireNonNull(dataTo, "dataTo must not be null");
         Objects.requireNonNull(position, "position must not be null");
