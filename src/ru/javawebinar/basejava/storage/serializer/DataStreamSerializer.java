@@ -1,10 +1,12 @@
 package ru.javawebinar.basejava.storage.serializer;
 
+import org.omg.CORBA.Object;
 import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +18,15 @@ public class DataStreamSerializer implements ReaderWriterObject {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
-            }
+            writeCollection(dos, contacts.entrySet(),
+                    new WriterItem() {
+                        @Override
+                        public void write(Object o) throws IOException {
+                            dos.writeUTF(o.getKey().name());
+                            dos.writeUTF(o.getValue());
+                        }
+
+                    });
             Map<SectionType, Section> sections = r.getSections();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
@@ -34,10 +40,10 @@ public class DataStreamSerializer implements ReaderWriterObject {
                         for (Experience experience : ((ExperienceSection) section).getexperiencesList()) {
                             writeDate(dos, experience.getDataFrom());
                             writeDate(dos, experience.getDataTo());
-                            dos.writeUTF(experience.getDescription());
+                            dos.writeUTF(checkNull(experience.getDescription()));
                             dos.writeUTF(experience.getPosition());
                             dos.writeUTF(experience.getHomePage().getUrl());
-                            dos.writeUTF(experience.getHomePage().getName());
+                            dos.writeUTF(checkNull(experience.getHomePage().getName()));
                         }
                         break;
                     case ACHIEVEMENT:
@@ -56,10 +62,25 @@ public class DataStreamSerializer implements ReaderWriterObject {
         }
     }
 
+    private String checkNull(String value) {
+        return (value == null) ? " " : value;
+    }
+
     private void writeDate(DataOutputStream dos, LocalDate ld) throws IOException {
         dos.writeInt(ld.getYear());
         dos.writeInt(ld.getMonth().getValue());
         dos.writeInt(ld.getDayOfMonth());
+    }
+
+    private interface WriterItem<T> {
+        void write(T t) throws IOException;
+    }
+
+    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, WriterItem<T> writeItem) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection) {
+            writeItem.write(item);
+        }
     }
 
     private LocalDate readDate(DataInputStream dis) throws IOException {
