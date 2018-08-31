@@ -1,6 +1,5 @@
 package ru.javawebinar.basejava.storage.serializer;
 
-import org.omg.CORBA.Object;
 import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
@@ -18,47 +17,41 @@ public class DataStreamSerializer implements ReaderWriterObject {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
-            writeCollection(dos, contacts.entrySet(),
-                    new WriterItem() {
-                        @Override
-                        public void write(Object o) throws IOException {
-                            dos.writeUTF(o.getKey().name());
-                            dos.writeUTF(o.getValue());
-                        }
-
-                    });
-            Map<SectionType, Section> sections = r.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+            writeCollection(dos, contacts.entrySet(), entry -> {
+                dos.writeUTF(entry.getKey().name());
+                dos.writeUTF(entry.getValue());
+            });
+            writeCollection(dos, r.getSections().entrySet(), entry -> {
                 SectionType sectionType = entry.getKey();
                 Section section = entry.getValue();
                 dos.writeUTF(sectionType.name());
                 switch (sectionType) {
                     case EXPERIENCE:
                     case EDUCATION:
-                        dos.writeInt(((ExperienceSection) section).getexperiencesList().size());
-                        for (Experience experience : ((ExperienceSection) section).getexperiencesList()) {
-                            writeDate(dos, experience.getDataFrom());
-                            writeDate(dos, experience.getDataTo());
-                            dos.writeUTF(checkNull(experience.getDescription()));
-                            dos.writeUTF(experience.getPosition());
+                        writeCollection(dos, ((ExperienceSection) section).getexperiencesList(), experience -> {
                             dos.writeUTF(experience.getHomePage().getUrl());
                             dos.writeUTF(checkNull(experience.getHomePage().getName()));
-                        }
+                            writeCollection(dos, ((Experience) experience).getPositions(), position -> {
+                                writeDate(dos, position.getDataFrom());
+                                writeDate(dos, position.getDataTo());
+                                dos.writeUTF(checkNull(position.getDescription()));
+                                dos.writeUTF(position.getPosition());
+                            });
+                        });
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         dos.writeInt(((ListSection) section).getDescriptions().size());
-                        for (String description : ((ListSection) section).getDescriptions()) {
+                        writeCollection(dos, ((ListSection) section).getDescriptions(), description -> {
                             dos.writeUTF(description);
-                        }
+                        });
                         break;
                     case PERSONAL:
                     case OBJECTIVE:
                         dos.writeUTF(((TextSection) section).getDescription());
                         break;
                 }
-            }
+            });
         }
     }
 
@@ -141,6 +134,17 @@ public class DataStreamSerializer implements ReaderWriterObject {
     }
 
     private Experience readExperience(DataInputStream dis) throws IOException {
-        return new Experience(readDate(dis), readDate(dis), dis.readUTF(), dis.readUTF(), dis.readUTF(), dis.readUTF());
+        return new Experience(dis.readUTF(), dis.readUTF(), readExperiencePositions(dis));
     }
+
+    private List<Experience.ExperienceList> readExperiencePositions(DataInputStream dis) throws IOException {
+        int size = dis.readInt();
+        List<Experience.ExperienceList> experiencePositions = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            experiencePositions.add(new Experience.ExperienceList(readDate(dis), readDate(dis), dis.readUTF(), dis.readUTF()));
+        }
+        return experiencePositions;
+    }
+
+
 }

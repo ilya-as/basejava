@@ -12,8 +12,8 @@ public class MainObjectModel {
         String descriptionExperience = "description experience";
         LocalDate dataFrom = LocalDate.of(2016, 2, 3);
         LocalDate dataTo = LocalDate.of(2018, 7, 4);
-        Experience experience = new Experience(dataFrom,dataTo,descriptionExperience,
-                "java progammer" , "wrike.com","Wrike" );
+        Experience.ExperienceList positionList = new Experience.ExperienceList(dataFrom, dataTo,descriptionExperience, "java progammer");
+        Experience experience = new Experience("Wrike", "wrike.com", positionList);
         List<Experience> experiencesList = new ArrayList<>();
         experiencesList.add(experience);
         Section experienceSection = new ExperienceSection(experiencesList);
@@ -21,8 +21,9 @@ public class MainObjectModel {
         String descriptionEducation = "description education";
         LocalDate educationFrom = LocalDate.of(2011, 6, 1);
         LocalDate educationTo = LocalDate.of(2016, 7, 31);
-        Experience education = new Experience(educationFrom, educationTo,
-                descriptionEducation, "engineer","", "MGU");
+        Experience.ExperienceList positionEducationList = new Experience.ExperienceList(educationFrom, educationTo,descriptionEducation,  "engineer" );
+        Experience education = new Experience("MGU", "mgu.com", positionEducationList);
+
         List<Experience> educationsList = new ArrayList<>();
         educationsList.add(education);
         Section educationSection = new ExperienceSection(educationsList);
