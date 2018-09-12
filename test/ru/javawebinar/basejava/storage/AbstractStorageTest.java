@@ -40,7 +40,7 @@ public class AbstractStorageTest {
         String descriptionExperience = "description experience";
         LocalDate dataFrom = LocalDate.of(2016, 2, 3);
         LocalDate dataTo = LocalDate.of(2018, 7, 4);
-        Experience.ExperienceList positionList = new Experience.ExperienceList(dataFrom, dataTo,descriptionExperience, "java progammer");
+        Experience.ExperienceList positionList = new Experience.ExperienceList(dataFrom, dataTo, descriptionExperience, "java progammer");
         Experience experience = new Experience("Wrike", "wrike.com", positionList);
         List<Experience> experiencesList = new ArrayList<>();
         experiencesList.add(experience);
@@ -49,7 +49,7 @@ public class AbstractStorageTest {
         String descriptionEducation = "description education";
         LocalDate educationFrom = LocalDate.of(2011, 6, 1);
         LocalDate educationTo = LocalDate.of(2016, 7, 31);
-        Experience.ExperienceList positionEducationList = new Experience.ExperienceList(educationFrom, educationTo,descriptionEducation,  "engineer" );
+        Experience.ExperienceList positionEducationList = new Experience.ExperienceList(educationFrom, educationTo, descriptionEducation, "engineer");
         Experience education = new Experience("MGU", "mgu.com", positionEducationList);
 
         List<Experience> educationsList = new ArrayList<>();
@@ -62,8 +62,8 @@ public class AbstractStorageTest {
         Section listAchievement = new ListSection(descriptionsAchievement);
 
         List<String> descriptionsQualifications = new ArrayList<>();
-        descriptionsQualifications.add("descriptionsQualifications" + "1");
-        descriptionsQualifications.add("descriptionsQualifications" + "2");
+        descriptionsQualifications.add("descriptionsQualifications1");
+        descriptionsQualifications.add("descriptionsQualifications2");
         Section listQualifications = new ListSection(descriptionsQualifications);
 
         RESUME_1.addContact(ContactType.TELEPHONE, "333-22-11");

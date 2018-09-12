@@ -29,8 +29,8 @@ public class DataStreamSerializer implements ReaderWriterObject {
                     case EXPERIENCE:
                     case EDUCATION:
                         writeCollection(dos, ((ExperienceSection) section).getexperiencesList(), experience -> {
-                            dos.writeUTF(experience.getHomePage().getUrl());
                             dos.writeUTF(checkNull(experience.getHomePage().getName()));
+                            dos.writeUTF(experience.getHomePage().getUrl());
                             writeCollection(dos, ((Experience) experience).getPositions(), position -> {
                                 writeDate(dos, position.getDataFrom());
                                 writeDate(dos, position.getDataTo());
@@ -41,7 +41,6 @@ public class DataStreamSerializer implements ReaderWriterObject {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        dos.writeInt(((ListSection) section).getDescriptions().size());
                         writeCollection(dos, ((ListSection) section).getDescriptions(), description -> {
                             dos.writeUTF(description);
                         });
@@ -56,7 +55,7 @@ public class DataStreamSerializer implements ReaderWriterObject {
     }
 
     private String checkNull(String value) {
-        return (value == null) ? " " : value;
+        return (value == null) ? "" : value;
     }
 
     private void writeDate(DataOutputStream dos, LocalDate ld) throws IOException {
@@ -69,6 +68,7 @@ public class DataStreamSerializer implements ReaderWriterObject {
         void write(T t) throws IOException;
     }
 
+    //!!
     private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, WriterItem<T> writeItem) throws IOException {
         dos.writeInt(collection.size());
         for (T item : collection) {
@@ -86,15 +86,11 @@ public class DataStreamSerializer implements ReaderWriterObject {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            int sizeSection = dis.readInt();
-            for (int i = 0; i < sizeSection; i++) {
+            readCollection(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readCollection(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 resume.addSection(sectionType, readSection(dis, sectionType));
-            }
+            });
             return resume;
         }
     }
@@ -103,7 +99,8 @@ public class DataStreamSerializer implements ReaderWriterObject {
         switch (sectionType) {
             case EXPERIENCE:
             case EDUCATION:
-                return new ExperienceSection(readExperienceList(dis));
+                return new ExperienceSection(
+                        readList(dis, () -> readExperience(dis)));
             case ACHIEVEMENT:
             case QUALIFICATIONS:
                 return new ListSection(readListSection(dis));
@@ -113,15 +110,6 @@ public class DataStreamSerializer implements ReaderWriterObject {
             default:
                 throw new IOException();
         }
-    }
-
-    private List<Experience> readExperienceList(DataInputStream dis) throws IOException {
-        int size = dis.readInt();
-        List<Experience> experiencesList = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            experiencesList.add(readExperience(dis));
-        }
-        return experiencesList;
     }
 
     private List<String> readListSection(DataInputStream dis) throws IOException {
@@ -147,4 +135,27 @@ public class DataStreamSerializer implements ReaderWriterObject {
     }
 
 
+    private <T> List<T> readList(DataInputStream dis, ReadListItem<T> readItem) throws IOException {
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(readItem.read());
+        }
+        return list;
+    }
+
+    private void readCollection(DataInputStream dis, ReadItem readItem) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            readItem.read();
+        }
+    }
+
+    private interface ReadListItem<T> {
+        T read() throws IOException;
+    }
+
+    private interface ReadItem {
+        void read() throws IOException;
+    }
 }
