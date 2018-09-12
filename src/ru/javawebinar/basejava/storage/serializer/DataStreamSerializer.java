@@ -68,7 +68,6 @@ public class DataStreamSerializer implements ReaderWriterObject {
         void write(T t) throws IOException;
     }
 
-    //!!
     private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, WriterItem<T> writeItem) throws IOException {
         dos.writeInt(collection.size());
         for (T item : collection) {
