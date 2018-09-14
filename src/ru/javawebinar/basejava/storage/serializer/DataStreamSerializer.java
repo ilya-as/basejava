@@ -41,9 +41,8 @@ public class DataStreamSerializer implements ReaderWriterObject {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeCollection(dos, ((ListSection) section).getDescriptions(), description -> {
-                            dos.writeUTF(description);
-                        });
+                        writeCollection(dos, ((ListSection) section).getDescriptions(), description ->
+                                dos.writeUTF(description));
                         break;
                     case PERSONAL:
                     case OBJECTIVE:
@@ -75,10 +74,6 @@ public class DataStreamSerializer implements ReaderWriterObject {
         }
     }
 
-    private LocalDate readDate(DataInputStream dis) throws IOException {
-        return LocalDate.of(dis.readInt(), dis.readInt(), dis.readInt());
-    }
-
     @Override
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
@@ -94,15 +89,20 @@ public class DataStreamSerializer implements ReaderWriterObject {
         }
     }
 
+    private LocalDate readDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), dis.readInt(), dis.readInt());
+    }
+
     private Section readSection(DataInputStream dis, SectionType sectionType) throws IOException {
         switch (sectionType) {
             case EXPERIENCE:
             case EDUCATION:
                 return new ExperienceSection(
-                        readList(dis, () -> readExperience(dis)));
+                        readList(dis, () -> new Experience(dis.readUTF(), dis.readUTF(), readList(dis, () ->
+                                new Experience.ExperienceList(readDate(dis), readDate(dis), dis.readUTF(), dis.readUTF()))))); //!
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                return new ListSection(readListSection(dis));
+                return new ListSection(readList(dis, () -> dis.readUTF()));
             case PERSONAL:
             case OBJECTIVE:
                 return new TextSection(dis.readUTF());
@@ -110,29 +110,6 @@ public class DataStreamSerializer implements ReaderWriterObject {
                 throw new IOException();
         }
     }
-
-    private List<String> readListSection(DataInputStream dis) throws IOException {
-        int size = dis.readInt();
-        List<String> listSection = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            listSection.add(dis.readUTF());
-        }
-        return listSection;
-    }
-
-    private Experience readExperience(DataInputStream dis) throws IOException {
-        return new Experience(dis.readUTF(), dis.readUTF(), readExperiencePositions(dis));
-    }
-
-    private List<Experience.ExperienceList> readExperiencePositions(DataInputStream dis) throws IOException {
-        int size = dis.readInt();
-        List<Experience.ExperienceList> experiencePositions = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            experiencePositions.add(new Experience.ExperienceList(readDate(dis), readDate(dis), dis.readUTF(), dis.readUTF()));
-        }
-        return experiencePositions;
-    }
-
 
     private <T> List<T> readList(DataInputStream dis, ReadListItem<T> readItem) throws IOException {
         int size = dis.readInt();
