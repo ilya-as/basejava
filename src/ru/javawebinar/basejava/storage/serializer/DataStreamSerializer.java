@@ -41,8 +41,7 @@ public class DataStreamSerializer implements ReaderWriterObject {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeCollection(dos, ((ListSection) section).getDescriptions(), description ->
-                                dos.writeUTF(description));
+                        writeCollection(dos, ((ListSection) section).getDescriptions(), dos::writeUTF);
                         break;
                     case PERSONAL:
                     case OBJECTIVE:
@@ -102,7 +101,7 @@ public class DataStreamSerializer implements ReaderWriterObject {
                                 new Experience.ExperienceList(readDate(dis), readDate(dis), dis.readUTF(), dis.readUTF()))))); //!
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                return new ListSection(readList(dis, () -> dis.readUTF()));
+                return new ListSection(readList(dis, dis::readUTF));
             case PERSONAL:
             case OBJECTIVE:
                 return new TextSection(dis.readUTF());
