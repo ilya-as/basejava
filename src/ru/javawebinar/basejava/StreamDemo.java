@@ -2,9 +2,13 @@ package ru.javawebinar.basejava;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.partitioningBy;
+import static java.util.stream.Collectors.toList;
 
 public class StreamDemo {
     public static void main(String[] args) {
@@ -31,9 +35,12 @@ public class StreamDemo {
         Predicate<Integer> evenFunc = (a) -> a % 2 == 0;
         Predicate<Integer> oddFunc = evenFunc.negate();
 
+        Map<Boolean, Integer> resultMap = integers.stream().collect(
+                partitioningBy(x -> x%2 == 0, Collectors.summingInt(Integer::intValue)));
+
         List<Integer> result = integers.stream()
                 .filter((integers.stream().mapToInt((a) -> a).sum() % 2 == 0) ? oddFunc : evenFunc)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         return result;
     }
