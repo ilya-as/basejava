@@ -20,9 +20,10 @@ public class StreamDemo {
     }
 
     static int minValue(int[] values) {
-        Integer result = IntStream.of(values).mapToObj(Integer::valueOf).sorted()
-                .distinct().reduce((s1, s2) -> (s1 *= 10) + s2).orElse(0);
-        return result;
+        return IntStream.of(values)
+                .sorted()
+                .distinct()
+                .reduce(0, (s1, s2) -> (s1 *= 10) + s2);
     }
 
     static List<Integer> oddOrEven(List<Integer> integers) {
