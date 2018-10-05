@@ -38,10 +38,8 @@ public class StreamDemo {
         Map<Boolean, Integer> resultMap = integers.stream().collect(
                 partitioningBy(x -> x % 2 == 0, Collectors.summingInt(Integer::intValue)));
 
-        List<Integer> result = integers.stream()
+        return integers.stream()
                 .filter((integers.stream().mapToInt((a) -> a).sum() % 2 == 0) ? oddFunc : evenFunc)
                 .collect(toList());
-
-        return result;
     }
 }
