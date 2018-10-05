@@ -36,7 +36,7 @@ public class StreamDemo {
         Predicate<Integer> oddFunc = evenFunc.negate();
 
         Map<Boolean, Integer> resultMap = integers.stream().collect(
-                partitioningBy(x -> x%2 == 0, Collectors.summingInt(Integer::intValue)));
+                partitioningBy(x -> x % 2 == 0, Collectors.summingInt(Integer::intValue)));
 
         List<Integer> result = integers.stream()
                 .filter((integers.stream().mapToInt((a) -> a).sum() % 2 == 0) ? oddFunc : evenFunc)
