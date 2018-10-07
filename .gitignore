@@ -1,7 +1,8 @@
 .idea
 out
 *.iml
-/lib/*
-
+log
+*.md
+*.xml
 
 
