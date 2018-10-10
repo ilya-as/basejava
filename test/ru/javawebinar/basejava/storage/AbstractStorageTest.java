@@ -37,7 +37,7 @@ public class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3, "ivanov3");
         RESUME_4 = new Resume(UUID_4, "ivanov4");
 
-        String descriptionExperience = "description experience";
+        /*String descriptionExperience = "description experience";
         LocalDate dataFrom = LocalDate.of(2016, 2, 3);
         LocalDate dataTo = LocalDate.of(2018, 7, 4);
         Experience.ExperienceList positionList = new Experience.ExperienceList(dataFrom, dataTo, descriptionExperience, "java progammer");
@@ -78,7 +78,7 @@ public class AbstractStorageTest {
         RESUME_1.addSection(SectionType.ACHIEVEMENT, listAchievement);
         RESUME_1.addSection(SectionType.QUALIFICATIONS, listQualifications);
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("good in job"));
-        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));
+        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));*/
     }
 
     public AbstractStorageTest(Storage storage) {
