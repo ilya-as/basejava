@@ -29,7 +29,7 @@ public class FileStorage extends AbstractStorage<File> {
     public void clear() {
         File files[] = directory.listFiles();
         if (files == null) {
-            throw new StorageException("directory is empty", null);
+            throw new StorageException("directory is empty");
         }
         for (File file : files) {
             clearElement(file);
@@ -39,7 +39,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     public int size() {
         if (directory.list() == null) {
-            throw new StorageException("Read directory error", null);
+            throw new StorageException("Read directory error");
         }
         return directory.list().length;
     }
@@ -94,7 +94,7 @@ public class FileStorage extends AbstractStorage<File> {
         List<Resume> resumeList = new ArrayList<>(size());
         File files[] = directory.listFiles();
         if (directory.list() == null) {
-            throw new StorageException("Read directory error", null);
+            throw new StorageException("Read directory error");
         }
         for (File file : files) {
             resumeList.add(getElement(file));

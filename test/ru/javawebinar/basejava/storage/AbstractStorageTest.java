@@ -4,13 +4,12 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.model.SectionType;
+import ru.javawebinar.basejava.model.TextSection;
 
 import java.io.File;
-import java.time.LocalDate;
-import java.util.ArrayList;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,7 +18,8 @@ import static org.junit.Assert.assertEquals;
 public class AbstractStorageTest {
 
     public Storage storage;
-    protected static final File STORAGE_DIR = new File("C:\\Java\\Javaops\\HW3\\storage");
+    //protected static final File STORAGE_DIR = Config.get().getStorageDir();
+    protected static final File STORAGE_DIR = new File("D:\\javaops\\basejava\\storage");
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -37,7 +37,7 @@ public class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3, "ivanov3");
         RESUME_4 = new Resume(UUID_4, "ivanov4");
 
-        String descriptionExperience = "description experience";
+     /*   String descriptionExperience = "description experience";
         LocalDate dataFrom = LocalDate.of(2016, 2, 3);
         LocalDate dataTo = LocalDate.of(2018, 7, 4);
         Experience.ExperienceList positionList = new Experience.ExperienceList(dataFrom, dataTo, descriptionExperience, "java progammer");
@@ -78,7 +78,7 @@ public class AbstractStorageTest {
         RESUME_1.addSection(SectionType.ACHIEVEMENT, listAchievement);
         RESUME_1.addSection(SectionType.QUALIFICATIONS, listQualifications);
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("good in job"));
-        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));
+        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));*/
     }
 
     public AbstractStorageTest(Storage storage) {
