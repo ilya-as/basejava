@@ -6,6 +6,7 @@ import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.ConnectionFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SqlStorage implements Storage {
@@ -46,7 +47,10 @@ public class SqlStorage implements Storage {
              PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
             ps.setString(1, r.getFullName());
             ps.setString(2, r.getUuid());
-            ps.execute();
+            ps.executeUpdate();
+            if (ps.executeUpdate() == 0) {
+                throw new NotExistStorageException(r.getUuid());
+            }
         } catch (SQLException e) {
             throw new StorageException(e);
         }
@@ -78,11 +82,34 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return null;
+
+        List<Resume> resumes = new ArrayList<>();
+
+        try (Connection conn = connectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r ORDER BY full_name")) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                resumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
+
+        return resumes;
     }
 
     @Override
     public int size() {
-        return 0;
+        int size = 0;
+        try (Connection conn = connectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT count(*) FROM resume")) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                size = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
+        return size;
     }
 }
