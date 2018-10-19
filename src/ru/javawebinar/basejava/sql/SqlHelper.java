@@ -5,6 +5,7 @@ import ru.javawebinar.basejava.exception.StorageException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SqlHelper {
@@ -14,20 +15,36 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public PreparedStatement runQuery(String runQuery) throws SQLException {
-        Connection conn = connectionFactory.getConnection();
-        PreparedStatement ps = conn.prepareStatement(runQuery);
-        return ps;
-
-
-        /*try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement ps = conn.prepareStatement(runQuery)) {
-             return ps.execute();
-        } catch (SQLException e) {
-            if (e.getSQLState().equals("23505")) {
-                throw new ExistStorageException(null);
-            }
-            throw new StorageException(e);
-        }*/
+    public void executeQuery(String textQuery) {
+        try {
+            prepareQuery(textQuery).executeUpdate();
+        } catch (SQLException ex) {
+            throw parseException(ex);
+        }
     }
+
+    public ResultSet readRecords(String textQuery) {
+        ResultSet resultSet = null;
+        try {
+            resultSet = prepareQuery(textQuery).executeQuery();
+        } catch (SQLException ex) {
+            throw parseException(ex);
+        }
+        return resultSet;
+    }
+
+    private PreparedStatement prepareQuery(String textQuery) throws SQLException {
+        Connection conn = connectionFactory.getConnection();
+        PreparedStatement ps = conn.prepareStatement(textQuery);
+        return ps;
+    }
+
+    private StorageException parseException(SQLException e) {
+        if (e.getSQLState().equals("23505")) {
+            return new ExistStorageException(null);
+        }
+        return new StorageException(e);
+    }
+
 }
+
