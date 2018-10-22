@@ -5,7 +5,6 @@ import ru.javawebinar.basejava.exception.StorageException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SqlHelper {
@@ -15,22 +14,32 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public void executeQuery(String textQuery) {
+    public void executeQuery(String textQuery)  {
         try {
-            prepareQuery(textQuery).executeUpdate();
+         PreparedStatement ps = prepareQuery(textQuery);
+            SqlRunner sqlRunner = (SqlRunner) ps;
+            executeQuery(textQuery, sqlRunner);
+        } catch (SQLException ex) {
+            throw parseException(ex);
+        }
+
+    }
+
+    public void executeQuery(String textQuery,SqlRunner sqlRunner) {
+        try {
+            sqlRunner.runQuery(prepareQuery(textQuery));
         } catch (SQLException ex) {
             throw parseException(ex);
         }
     }
 
-    public ResultSet readRecords(String textQuery) {
-        ResultSet resultSet = null;
+    public <T> T readRecords(String textQuery,SqlGetter sqlGetter) {
+
         try {
-            resultSet = prepareQuery(textQuery).executeQuery();
+            return (T) sqlGetter.getRecords(prepareQuery(textQuery));
         } catch (SQLException ex) {
             throw parseException(ex);
         }
-        return resultSet;
     }
 
     private PreparedStatement prepareQuery(String textQuery) throws SQLException {

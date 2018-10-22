@@ -33,9 +33,16 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        ResultSet resultSet =  sqlHelper.readRecords("SELECT * FROM resume r WHERE r.uuid =?");
+        return sqlHelper.readRecords("SELECT * FROM resume r WHERE r.uuid =?",
+                ps -> {   ps.setString(1, uuid);
+                    ResultSet rs = ps.executeQuery();
+                    if (!rs.next()) {
+                        throw new NotExistStorageException(uuid);
+                    }
+                    return new Resume(uuid, rs.getString("full_name"));
 
-        return resume;
+
+    });
     }
 
     @Override
