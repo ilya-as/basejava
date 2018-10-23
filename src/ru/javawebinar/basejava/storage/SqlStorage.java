@@ -1,10 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.sql.ConnectionFactory;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.*;
@@ -14,16 +12,9 @@ import java.util.List;
 public class SqlStorage implements Storage {
 
     public final SqlHelper sqlHelper;
-    public final ConnectionFactory connectionFactory;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
-        connectionFactory = new ConnectionFactory() {
-            @Override
-            public Connection getConnection() throws SQLException {
-                return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-            }
-        };
     }
 
     @Override
@@ -59,7 +50,7 @@ public class SqlStorage implements Storage {
                 throw new NotExistStorageException(r.getUuid());
             }
         } catch (SQLException e) {
-            throw sqlHelper.parseException(e);
+            throw new StorageException(e);
         }
     }
 
