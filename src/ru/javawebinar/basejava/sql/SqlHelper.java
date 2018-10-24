@@ -14,13 +14,17 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public PreparedStatement prepareQuery(String textQuery) throws SQLException {
-        Connection conn = connectionFactory.getConnection();
-        PreparedStatement ps = conn.prepareStatement(textQuery);
-        return ps;
+    public <T> T transactionExecute(String textQuery, SqlRunner<T> sqlRunner) {
+        try {
+            Connection conn = connectionFactory.getConnection();
+            PreparedStatement ps = conn.prepareStatement(textQuery);
+            return sqlRunner.execute(ps);
+        } catch (SQLException e) {
+            throw parseException(e);
+        }
     }
 
-    public StorageException parseException(SQLException e) {
+    private StorageException parseException(SQLException e) {
         if (e.getSQLState().equals("23505")) {
             return new ExistStorageException(null);
         }
