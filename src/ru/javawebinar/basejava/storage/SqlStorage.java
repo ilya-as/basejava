@@ -21,7 +21,7 @@ public class SqlStorage implements Storage {
     @Override
     public void clear() {
         sqlHelper.transactionExecute("DELETE FROM resume", (SqlRunner<Resume>) ps -> {
-            ps.executeUpdate();
+            ps.execute();
             return null;
         });
     }
@@ -56,8 +56,9 @@ public class SqlStorage implements Storage {
         sqlHelper.transactionExecute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", (SqlRunner<Resume>) ps -> {
             ps.setString(1, r.getUuid());
             ps.setString(2, r.getFullName());
-            ps.executeUpdate();
+            ps.execute();
             return null;
+
         });
     }
 
@@ -87,7 +88,7 @@ public class SqlStorage implements Storage {
     @Override
     public int size() {
         return sqlHelper.transactionExecute("SELECT count(*) FROM resume", ps -> {
-            Integer size = 0;
+            int size = 0;
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 size = rs.getInt(1);
