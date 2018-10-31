@@ -14,22 +14,34 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public <T> T transactionExecute(String textQuery, SqlRunner<T> sqlRunner) {
+    public void execute(String sql) {
+        execute(sql, PreparedStatement::execute);
+    }
+
+    public <T> T execute(String textQuery, SqlRunner<T> sqlRunner) {
         try {
             Connection conn = connectionFactory.getConnection();
             PreparedStatement ps = conn.prepareStatement(textQuery);
             return sqlRunner.execute(ps);
         } catch (SQLException e) {
-            throw parseException(e);
+            throw ExceptionUtil.convertException(e);
         }
     }
 
-    private StorageException parseException(SQLException e) {
-        if (e.getSQLState().equals("23505")) {
-            return new ExistStorageException(null);
+    public <T> T transactionalExecute(SqlTransaction<T> executor) {
+        try (Connection conn = connectionFactory.getConnection()) {
+            try {
+                conn.setAutoCommit(false);
+                T res = executor.execute(conn);
+                conn.commit();
+                return res;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw ExceptionUtil.convertException(e);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
         }
-        return new StorageException(e);
     }
-
 }
 
