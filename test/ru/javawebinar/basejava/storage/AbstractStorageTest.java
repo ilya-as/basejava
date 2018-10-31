@@ -66,7 +66,7 @@ public class AbstractStorageTest {
         List<String> descriptionsQualifications = new ArrayList<>();
         descriptionsQualifications.add("descriptionsQualifications1");
         descriptionsQualifications.add("descriptionsQualifications2");
-        Section listQualifications = new ListSection(descriptionsQualifications);
+        Section listQualifications = new ListSection(descriptionsQualifications);*/
 
         RESUME_1.addContact(ContactType.TELEPHONE, "333-22-11");
         RESUME_1.addContact(ContactType.SKYPE, "grigory.kislin");
@@ -75,7 +75,7 @@ public class AbstractStorageTest {
         RESUME_1.addContact(ContactType.GITHUB, "gkislin.github.ru");
         RESUME_1.addContact(ContactType.HOMEPAGE, "javaops.ru");
         RESUME_1.addContact(ContactType.STACKOVERFLOW, "gkislin.stackoverflow.ru");
-        RESUME_1.addSection(SectionType.EXPERIENCE, experienceSection);
+       /*  RESUME_1.addSection(SectionType.EXPERIENCE, experienceSection);
         RESUME_1.addSection(SectionType.EDUCATION, educationSection);
         RESUME_1.addSection(SectionType.ACHIEVEMENT, listAchievement);
         RESUME_1.addSection(SectionType.QUALIFICATIONS, listQualifications);
