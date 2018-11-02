@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class SqlStorage implements Storage {
 
-    public final SqlHelper sqlHelper;
+    private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
@@ -38,7 +38,9 @@ public class SqlStorage implements Storage {
                         throw new NotExistStorageException(uuid);
                     }
                     Resume r = new Resume(uuid, rs.getString("full_name"));
-                    addContact(rs, r);
+                    do {
+                        addContact(rs, r);
+                    } while (rs.next());
                     return r;
                 });
     }
@@ -101,6 +103,7 @@ public class SqlStorage implements Storage {
                     try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact c")) {
                         ResultSet rs = ps.executeQuery();
                         while (rs.next()) {
+                            System.out.println(rs.getString("resume_uuid"));
                             String uuid = rs.getString("resume_uuid");
                             Resume r = resumes.get(uuid);
                             if (r != null) {
@@ -114,13 +117,11 @@ public class SqlStorage implements Storage {
     }
 
     private void addContact(ResultSet rs, Resume r) throws SQLException {
-        do {
-            String value = rs.getString("value");
-            if (value != null) {
-                ContactType type = ContactType.valueOf(rs.getString("type"));
-                r.addContact(type, value);
-            }
-        } while (rs.next());
+        String value = rs.getString("value");
+        if (value != null) {
+            ContactType type = ContactType.valueOf(rs.getString("type"));
+            r.addContact(type, value);
+        }
     }
 
     private void insertContact(Connection conn, Resume r) throws SQLException {

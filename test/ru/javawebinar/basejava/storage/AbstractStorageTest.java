@@ -75,6 +75,10 @@ public class AbstractStorageTest {
         RESUME_1.addContact(ContactType.GITHUB, "gkislin.github.ru");
         RESUME_1.addContact(ContactType.HOMEPAGE, "javaops.ru");
         RESUME_1.addContact(ContactType.STACKOVERFLOW, "gkislin.stackoverflow.ru");
+        RESUME_2.addContact(ContactType.TELEPHONE, "222-222");
+        RESUME_2.addContact(ContactType.SKYPE, "ivanov");
+        RESUME_3.addContact(ContactType.TELEPHONE, "333-333");
+        RESUME_3.addContact(ContactType.SKYPE, "petrov");
        /*  RESUME_1.addSection(SectionType.EXPERIENCE, experienceSection);
         RESUME_1.addSection(SectionType.EDUCATION, educationSection);
         RESUME_1.addSection(SectionType.ACHIEVEMENT, listAchievement);
@@ -93,16 +97,6 @@ public class AbstractStorageTest {
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
-    }
-
-    @Test
-    public void getContact() {
-        assertEquals("gkislin.github.ru", RESUME_1.getContact(ContactType.GITHUB));
-    }
-
-    @Test
-    public void getSection() {
-        assertEquals(new TextSection("good in job"), RESUME_1.getSection(SectionType.PERSONAL));
     }
 
     @Test
