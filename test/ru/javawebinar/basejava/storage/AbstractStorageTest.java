@@ -5,12 +5,11 @@ import org.junit.Test;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.model.SectionType;
-import ru.javawebinar.basejava.model.TextSection;
+import ru.javawebinar.basejava.model.*;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3, "ivanov3");
         RESUME_4 = new Resume(UUID_4, "ivanov4");
 
-     /*   String descriptionExperience = "description experience";
+        String descriptionExperience = "description experience";
         LocalDate dataFrom = LocalDate.of(2016, 2, 3);
         LocalDate dataTo = LocalDate.of(2018, 7, 4);
         Experience.ExperienceList positionList = new Experience.ExperienceList(dataFrom, dataTo, descriptionExperience, "java progammer");
@@ -66,7 +65,7 @@ public class AbstractStorageTest {
         List<String> descriptionsQualifications = new ArrayList<>();
         descriptionsQualifications.add("descriptionsQualifications1");
         descriptionsQualifications.add("descriptionsQualifications2");
-        Section listQualifications = new ListSection(descriptionsQualifications);*/
+        Section listQualifications = new ListSection(descriptionsQualifications);
 
         RESUME_1.addContact(ContactType.TELEPHONE, "333-22-11");
         RESUME_1.addContact(ContactType.SKYPE, "grigory.kislin");
@@ -77,14 +76,18 @@ public class AbstractStorageTest {
         RESUME_1.addContact(ContactType.STACKOVERFLOW, "gkislin.stackoverflow.ru");
         RESUME_2.addContact(ContactType.TELEPHONE, "222-222");
         RESUME_2.addContact(ContactType.SKYPE, "ivanov");
+        RESUME_2.addContact(ContactType.EMAIL, "ivanov@yandex.ru");
         RESUME_3.addContact(ContactType.TELEPHONE, "333-333");
         RESUME_3.addContact(ContactType.SKYPE, "petrov");
-       /*  RESUME_1.addSection(SectionType.EXPERIENCE, experienceSection);
+        RESUME_3.addContact(ContactType.EMAIL, "ivanov3@yandex.ru");
+        RESUME_1.addSection(SectionType.EXPERIENCE, experienceSection);
         RESUME_1.addSection(SectionType.EDUCATION, educationSection);
         RESUME_1.addSection(SectionType.ACHIEVEMENT, listAchievement);
         RESUME_1.addSection(SectionType.QUALIFICATIONS, listQualifications);
         RESUME_1.addSection(SectionType.PERSONAL, new TextSection("good in job"));
-        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));*/
+        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));
+        RESUME_2.addSection(SectionType.PERSONAL, new TextSection("good in job"));
+        RESUME_2.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));
     }
 
     public AbstractStorageTest(Storage storage) {
