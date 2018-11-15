@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,6 +12,10 @@ public class ExperienceSection extends Section {
     private List<Experience> experiencesList;
 
     public ExperienceSection() {
+    }
+
+    public ExperienceSection(Experience... content) {
+        this(Arrays.asList(content));
     }
 
     public ExperienceSection(List<Experience> experiencesList) {
