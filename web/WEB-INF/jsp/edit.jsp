@@ -1,4 +1,4 @@
-<%@ page import="ru.javawebinar.basejava.model.ContactType" %>
+<%@ page import="ru.javawebinar.basejava.model.*" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
 <%@ page import="ru.javawebinar.basejava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -44,10 +44,12 @@
                 <c:choose>
 
                     <c:when test="${contentType eq 'PERSONAL' || contentType eq 'OBJECTIVE'}">
+
                         <h4>${contentType.name()}</h4>
                         <c:set var="textContent" value="${resume.getSection(contentType)}" scope="request"/>
                         <c:if test="${not empty textContent}">
-                            <jsp:useBean id="textContent" class="ru.javawebinar.basejava.model.TextSection"/>
+                            <jsp:useBean id="items"
+                                         class="ru.javawebinar.basejava.model.TextSection"/>
                             <dd><textarea name='${contentType.name()}' cols=75 rows=5
                                           form="editOrAdd">${textContent.description}</textarea>
                             </dd>

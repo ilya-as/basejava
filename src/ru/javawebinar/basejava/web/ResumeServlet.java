@@ -27,7 +27,8 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume r = storage.get(uuid);
+        Resume r;
+        r = isActionOfAdding(request) ? new Resume(uuid) : storage.get(uuid);
         r.setFullName(fullName);
         String value;
         for (ContactType type : ContactType.values()) {
