@@ -31,7 +31,7 @@ public class ListSection extends Section {
     @Override
     public String toString() {
         return "ListSection{" +
-                "descriptions=" + descriptions +
+                "descriptions=" + descriptions.toString() +
                 '}';
     }
 

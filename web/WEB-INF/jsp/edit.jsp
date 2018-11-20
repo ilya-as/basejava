@@ -65,10 +65,8 @@
                         <c:if test="${not empty listContent}">
                             <jsp:useBean id="listContent"
                                          class="ru.javawebinar.basejava.model.ListSection"/>
-                            <dd><textarea name='${contentType.name()}' cols=75 rows=5 form="editOrAdd"><c:forEach
-                                    var="items"
-                                    items="${listContent.descriptions}">${items}</c:forEach></textarea>
-                            </dd>
+                            <dd> <textarea name='${type}' cols=75
+                                      rows=5><%=String.join("\n", listContent.getDescriptions())%></textarea></dd>
                         </c:if>
                         <c:if test="${empty listContent}">
                             <dd><textarea name='${contentType.name()}' cols=75 rows=5 form="editOrAdd"></textarea></dd>
