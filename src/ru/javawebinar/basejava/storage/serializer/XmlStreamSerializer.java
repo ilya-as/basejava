@@ -11,8 +11,8 @@ public class XmlStreamSerializer implements ReaderWriterObject {
 
     public XmlStreamSerializer() {
         xmlParser = new XmlParser(
-                Resume.class, Experience.class, Link.class,
-                ExperienceSection.class, TextSection.class, ListSection.class);
+                Resume.class, Organization.class, Link.class,
+                OrganizationSection.class, TextSection.class, ListSection.class, Organization.Position.class);
     }
 
     @Override

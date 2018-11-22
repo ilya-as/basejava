@@ -9,28 +9,28 @@ import java.util.List;
 public class MainObjectModel {
     public static void main(String[] args) {
 
-        String descriptionExperience = "description experience";
+        String descriptionExperience = "content organization";
         LocalDate dataFrom = LocalDate.of(2016, 2, 3);
         LocalDate dataTo = LocalDate.of(2018, 7, 4);
-        Experience.ExperienceList positionList = new Experience.ExperienceList(dataFrom, dataTo,descriptionExperience, "java progammer");
-        Experience experience = new Experience("Wrike", "wrike.com", positionList);
-        List<Experience> experiencesList = new ArrayList<>();
-        experiencesList.add(experience);
-        Section experienceSection = new ExperienceSection(experiencesList);
+        Organization.Position positionList = new Organization.Position(dataFrom, dataTo,descriptionExperience, "java progammer");
+        Organization organization = new Organization("Wrike", "wrike.com", positionList);
+        List<Organization> experiencesList = new ArrayList<>();
+        experiencesList.add(organization);
+        Section experienceSection = new OrganizationSection(experiencesList);
 
-        String descriptionEducation = "description education";
+        String descriptionEducation = "content education";
         LocalDate educationFrom = LocalDate.of(2011, 6, 1);
         LocalDate educationTo = LocalDate.of(2016, 7, 31);
-        Experience.ExperienceList positionEducationList = new Experience.ExperienceList(educationFrom, educationTo,descriptionEducation,  "engineer" );
-        Experience education = new Experience("MGU", "mgu.com", positionEducationList);
+        Organization.Position positionEducationList = new Organization.Position(educationFrom, educationTo,descriptionEducation,  "engineer" );
+        Organization education = new Organization("MGU", "mgu.com", positionEducationList);
 
-        List<Experience> educationsList = new ArrayList<>();
+        List<Organization> educationsList = new ArrayList<>();
         educationsList.add(education);
-        Section educationSection = new ExperienceSection(educationsList);
+        Section educationSection = new OrganizationSection(educationsList);
 
         List<String> descriptionsAchievement = new ArrayList<>();
-        descriptionsAchievement.add("description achievement 1");
-        descriptionsAchievement.add("description achievement 2");
+        descriptionsAchievement.add("content achievement 1");
+        descriptionsAchievement.add("content achievement 2");
         Section listAchievement = new ListSection(descriptionsAchievement);
 
         List<String> descriptionsQualifications = new ArrayList<>();
@@ -39,19 +39,19 @@ public class MainObjectModel {
         Section listQualifications = new ListSection(descriptionsQualifications);
 
         Resume resume = new Resume("Petrov Sergey");
-        resume.addContact(ContactType.TELEPHONE, "333-22-11");
-        resume.addContact(ContactType.SKYPE, "grigory.kislin");
-        resume.addContact(ContactType.EMAIL, "gkislin@yandex.ru");
-        resume.addContact(ContactType.LINDEDIN, "gkislin.linkedin.ru");
-        resume.addContact(ContactType.GITHUB, "gkislin.github.ru");
-        resume.addContact(ContactType.HOMEPAGE, "javaops.ru");
-        resume.addContact(ContactType.STACKOVERFLOW, "gkislin.stackoverflow.ru");
-        resume.addSection(SectionType.EXPERIENCE, experienceSection);
-        resume.addSection(SectionType.EDUCATION, educationSection);
-        resume.addSection(SectionType.ACHIEVEMENT, listAchievement);
-        resume.addSection(SectionType.QUALIFICATIONS, listQualifications);
-        resume.addSection(SectionType.PERSONAL, new TextSection("good in job"));
-        resume.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));
+        resume.setContact(ContactType.TELEPHONE, "333-22-11");
+        resume.setContact(ContactType.SKYPE, "grigory.kislin");
+        resume.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
+        resume.setContact(ContactType.LINDEDIN, "gkislin.linkedin.ru");
+        resume.setContact(ContactType.GITHUB, "gkislin.github.ru");
+        resume.setContact(ContactType.HOMEPAGE, "javaops.ru");
+        resume.setContact(ContactType.STACKOVERFLOW, "gkislin.stackoverflow.ru");
+        resume.setSection(SectionType.EXPERIENCE, experienceSection);
+        resume.setSection(SectionType.EDUCATION, educationSection);
+        resume.setSection(SectionType.ACHIEVEMENT, listAchievement);
+        resume.setSection(SectionType.QUALIFICATIONS, listQualifications);
+        resume.setSection(SectionType.PERSONAL, new TextSection("good in job"));
+        resume.setSection(SectionType.OBJECTIVE, new TextSection("objective content"));
 
         System.out.println("Resume: " + resume.toString());
 

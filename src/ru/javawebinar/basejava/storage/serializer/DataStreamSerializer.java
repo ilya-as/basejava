@@ -28,24 +28,24 @@ public class DataStreamSerializer implements ReaderWriterObject {
                 switch (sectionType) {
                     case EXPERIENCE:
                     case EDUCATION:
-                        writeCollection(dos, ((ExperienceSection) section).getexperiencesList(), experience -> {
-                            dos.writeUTF(checkNull(experience.getHomePage().getName()));
-                            dos.writeUTF(experience.getHomePage().getUrl());
-                            writeCollection(dos, ((Experience) experience).getPositions(), position -> {
-                                writeDate(dos, position.getDataFrom());
-                                writeDate(dos, position.getDataTo());
+                        writeCollection(dos, ((OrganizationSection) section).getOrganizations(), organization -> {
+                            dos.writeUTF(checkNull(organization.getHomePage().getName()));
+                            dos.writeUTF(organization.getHomePage().getUrl());
+                            writeCollection(dos, organization.getPositions(), position -> {
+                                writeDate(dos, position.getStartDate());
+                                writeDate(dos, position.getEndDate());
                                 dos.writeUTF(checkNull(position.getDescription()));
-                                dos.writeUTF(position.getPosition());
+                                dos.writeUTF(position.getTitle());
                             });
                         });
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeCollection(dos, ((ListSection) section).getDescriptions(), dos::writeUTF);
+                        writeCollection(dos, ((ListSection) section).getItems(), dos::writeUTF);
                         break;
                     case PERSONAL:
                     case OBJECTIVE:
-                        dos.writeUTF(((TextSection) section).getDescription());
+                        dos.writeUTF(((TextSection) section).getContent());
                         break;
                 }
             });
@@ -79,10 +79,10 @@ public class DataStreamSerializer implements ReaderWriterObject {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            readCollection(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readCollection(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             readCollection(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                resume.addSection(sectionType, readSection(dis, sectionType));
+                resume.setSection(sectionType, readSection(dis, sectionType));
             });
             return resume;
         }
@@ -96,9 +96,9 @@ public class DataStreamSerializer implements ReaderWriterObject {
         switch (sectionType) {
             case EXPERIENCE:
             case EDUCATION:
-                return new ExperienceSection(
-                        readList(dis, () -> new Experience(dis.readUTF(), dis.readUTF(), readList(dis, () ->
-                                new Experience.ExperienceList(readDate(dis), readDate(dis), dis.readUTF(), dis.readUTF()))))); //!
+                return new OrganizationSection(
+                        readList(dis, () -> new Organization(dis.readUTF(), dis.readUTF(), readList(dis, () ->
+                                new Organization.Position(readDate(dis), readDate(dis), dis.readUTF(), dis.readUTF()))))); //!
             case ACHIEVEMENT:
             case QUALIFICATIONS:
                 return new ListSection(readList(dis, dis::readUTF));

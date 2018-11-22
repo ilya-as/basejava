@@ -38,28 +38,28 @@ public class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3, "ivanov3");
         RESUME_4 = new Resume(UUID_4, "ivanov4");
 
-        String descriptionExperience = "description experience";
+        String descriptionExperience = "content organization";
         LocalDate dataFrom = LocalDate.of(2016, 2, 3);
         LocalDate dataTo = LocalDate.of(2018, 7, 4);
-        Experience.ExperienceList positionList = new Experience.ExperienceList(dataFrom, dataTo, descriptionExperience, "java progammer");
-        Experience experience = new Experience("Wrike", "wrike.com", positionList);
-        List<Experience> experiencesList = new ArrayList<>();
-        experiencesList.add(experience);
-        Section experienceSection = new ExperienceSection(experiencesList);
+        Organization.Position positionList = new Organization.Position(dataFrom, dataTo, descriptionExperience, "java progammer");
+        Organization organization = new Organization("Wrike", "wrike.com", positionList);
+        List<Organization> organizationList = new ArrayList<>();
+        organizationList.add(organization);
+        Section experienceSection = new OrganizationSection(organizationList);
 
-        String descriptionEducation = "description education";
+        String descriptionEducation = "content education";
         LocalDate educationFrom = LocalDate.of(2011, 6, 1);
         LocalDate educationTo = LocalDate.of(2016, 7, 31);
-        Experience.ExperienceList positionEducationList = new Experience.ExperienceList(educationFrom, educationTo, descriptionEducation, "engineer");
-        Experience education = new Experience("MGU", "mgu.com", positionEducationList);
+        Organization.Position positionEducationList = new Organization.Position(educationFrom, educationTo, descriptionEducation, "engineer");
+        Organization education = new Organization("MGU", "mgu.com", positionEducationList);
 
-        List<Experience> educationsList = new ArrayList<>();
+        List<Organization> educationsList = new ArrayList<>();
         educationsList.add(education);
-        Section educationSection = new ExperienceSection(educationsList);
+        Section educationSection = new OrganizationSection(educationsList);
 
         List<String> descriptionsAchievement = new ArrayList<>();
-        descriptionsAchievement.add("description achievement 1");
-        descriptionsAchievement.add("description achievement 2");
+        descriptionsAchievement.add("content achievement 1");
+        descriptionsAchievement.add("content achievement 2");
         Section listAchievement = new ListSection(descriptionsAchievement);
 
         List<String> descriptionsQualifications = new ArrayList<>();
@@ -67,27 +67,27 @@ public class AbstractStorageTest {
         descriptionsQualifications.add("descriptionsQualifications2");
         Section listQualifications = new ListSection(descriptionsQualifications);
 
-        RESUME_1.addContact(ContactType.TELEPHONE, "333-22-11");
-        RESUME_1.addContact(ContactType.SKYPE, "grigory.kislin");
-        RESUME_1.addContact(ContactType.EMAIL, "gkislin@yandex.ru");
-        RESUME_1.addContact(ContactType.LINDEDIN, "gkislin.linkedin.ru");
-        RESUME_1.addContact(ContactType.GITHUB, "gkislin.github.ru");
-        RESUME_1.addContact(ContactType.HOMEPAGE, "javaops.ru");
-        RESUME_1.addContact(ContactType.STACKOVERFLOW, "gkislin.stackoverflow.ru");
-        RESUME_2.addContact(ContactType.TELEPHONE, "222-222");
-        RESUME_2.addContact(ContactType.SKYPE, "ivanov");
-        RESUME_2.addContact(ContactType.EMAIL, "ivanov@yandex.ru");
-        RESUME_3.addContact(ContactType.TELEPHONE, "333-333");
-        RESUME_3.addContact(ContactType.SKYPE, "petrov");
-        RESUME_3.addContact(ContactType.EMAIL, "ivanov3@yandex.ru");
-        RESUME_1.addSection(SectionType.EXPERIENCE, experienceSection);
-        RESUME_1.addSection(SectionType.EDUCATION, educationSection);
-        RESUME_1.addSection(SectionType.ACHIEVEMENT, listAchievement);
-        RESUME_1.addSection(SectionType.QUALIFICATIONS, listQualifications);
-        RESUME_1.addSection(SectionType.PERSONAL, new TextSection("good in job"));
-        RESUME_1.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));
-        RESUME_2.addSection(SectionType.PERSONAL, new TextSection("good in job"));
-        RESUME_2.addSection(SectionType.OBJECTIVE, new TextSection("objective description"));
+        RESUME_1.setContact(ContactType.TELEPHONE, "333-22-11");
+        RESUME_1.setContact(ContactType.SKYPE, "grigory.kislin");
+        RESUME_1.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
+        RESUME_1.setContact(ContactType.LINDEDIN, "gkislin.linkedin.ru");
+        RESUME_1.setContact(ContactType.GITHUB, "gkislin.github.ru");
+        RESUME_1.setContact(ContactType.HOMEPAGE, "javaops.ru");
+        RESUME_1.setContact(ContactType.STACKOVERFLOW, "gkislin.stackoverflow.ru");
+        RESUME_2.setContact(ContactType.TELEPHONE, "222-222");
+        RESUME_2.setContact(ContactType.SKYPE, "ivanov");
+        RESUME_2.setContact(ContactType.EMAIL, "ivanov@yandex.ru");
+        RESUME_3.setContact(ContactType.TELEPHONE, "333-333");
+        RESUME_3.setContact(ContactType.SKYPE, "petrov");
+        RESUME_3.setContact(ContactType.EMAIL, "ivanov3@yandex.ru");
+        RESUME_1.setSection(SectionType.EXPERIENCE, experienceSection);
+        RESUME_1.setSection(SectionType.EDUCATION, educationSection);
+        RESUME_1.setSection(SectionType.ACHIEVEMENT, listAchievement);
+        RESUME_1.setSection(SectionType.QUALIFICATIONS, listQualifications);
+        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("good in job"));
+        RESUME_1.setSection(SectionType.OBJECTIVE, new TextSection("objective content"));
+        RESUME_2.setSection(SectionType.PERSONAL, new TextSection("good in job"));
+        RESUME_2.setSection(SectionType.OBJECTIVE, new TextSection("objective content"));
     }
 
     public AbstractStorageTest(Storage storage) {

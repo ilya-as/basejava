@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;
 import ru.javawebinar.basejava.util.DateUtil;
+import ru.javawebinar.basejava.util.HtmlUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -27,57 +28,66 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
+
+        final boolean isCreate = (uuid == null || uuid.length() == 0);
         Resume r;
-        r = isActionOfAdding(request) ? new Resume(uuid) : storage.get(uuid);
-        r.setFullName(fullName);
-        String value;
-        for (ContactType type : ContactType.values()) {
-            value = request.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
-                r.addContact(type, value);
-            } else {
-                r.getContacts().remove(type);
-            }
+        if (isCreate) {
+            r = new Resume(fullName);
+        } else {
+            r = storage.get(uuid);
+            r.setFullName(fullName);
         }
 
+        for (ContactType type : ContactType.values()) {
+            String value = request.getParameter(type.name());
+            if (HtmlUtil.isEmpty(value)) {
+                r.getContacts().remove(type);
+            } else {
+                r.setContact(type, value);
+            }
+        }
         for (SectionType type : SectionType.values()) {
-            value = request.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
+            String value = request.getParameter(type.name());
+            String[] values = request.getParameterValues(type.name());
+            if (HtmlUtil.isEmpty(value) && values.length < 2) {
+                r.getSections().remove(type);
+            } else {
                 switch (type) {
                     case OBJECTIVE:
                     case PERSONAL:
-                        r.addSection(type, new TextSection(value));
+                        r.setSection(type, new TextSection(value));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        r.addSection(type, new ListSection(value.split("\\n")));
+                        r.setSection(type, new ListSection(value.split("\\n")));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
-                        String[] values = request.getParameterValues(type.name());
-                        List<Experience> list = new ArrayList<>();
+                        List<Organization> orgs = new ArrayList<>();
+                        String[] urls = request.getParameterValues(type.name() + "url");
                         for (int i = 0; i < values.length; i++) {
-                            String index = String.valueOf(i);
                             String name = values[i];
-                            String url = request.getParameter(type.name() + index + "url");
-                            String[] posValues = request.getParameterValues(type.name() + index + "pos");
-                            List<Experience.ExperienceList> positionList = new ArrayList<>();
-                            String[] pos = request.getParameterValues(type.name() + index + "pos");
-                            String[] des = request.getParameterValues(type.name() + index + "des");
-                            String[] start = request.getParameterValues(type.name() + index + "start");
-                            String[] end = request.getParameterValues(type.name() + index + "end");
-                            for (int j = 0; j < posValues.length; j++) {
-                                positionList.add(new Experience.ExperienceList(
-                                        DateUtil.parse(start[j]), DateUtil.parse(end[j]), des[j], pos[j]));
+                            if (!HtmlUtil.isEmpty(name)) {
+                                List<Organization.Position> positions = new ArrayList<>();
+                                String pfx = type.name() + i;
+                                String[] startDates = request.getParameterValues(pfx + "startDate");
+                                String[] endDates = request.getParameterValues(pfx + "endDate");
+                                String[] titles = request.getParameterValues(pfx + "title");
+                                String[] descriptions = request.getParameterValues(pfx + "description");
+                                for (int j = 0; j < titles.length; j++) {
+                                    if (!HtmlUtil.isEmpty(titles[j])) {
+                                        positions.add(new Organization.Position(DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j]), titles[j], descriptions[j]));
+                                    }
+                                }
+                                orgs.add(new Organization(new Link(name, urls[i]), positions));
                             }
-                            list.add(new Experience(new Link(name, url), positionList));
                         }
-                        r.addSection(type, new ExperienceSection(list));
+                        r.setSection(type, new OrganizationSection(orgs));
+                        break;
                 }
-            } else r.getSections().remove(type);
+            }
         }
-
-        if (isActionOfAdding(request)) {
+        if (isCreate) {
             storage.save(r);
         } else {
             storage.update(r);
@@ -100,8 +110,46 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             case "view":
+                r = storage.get(uuid);
+                break;
+            case "add":
+                r = Resume.EMPTY;
+                break;
             case "edit":
                 r = storage.get(uuid);
+                for (SectionType type : SectionType.values()) {
+                    Section section = r.getSection(type);
+                    switch (type) {
+                        case OBJECTIVE:
+                        case PERSONAL:
+                            if (section == null) {
+                                section = TextSection.EMPTY;
+                            }
+                            break;
+                        case ACHIEVEMENT:
+                        case QUALIFICATIONS:
+                            if (section == null) {
+                                section = ListSection.EMPTY;
+                            }
+                            break;
+                        case EXPERIENCE:
+                        case EDUCATION:
+                            OrganizationSection orgSection = (OrganizationSection) section;
+                            List<Organization> emptyFirstOrganizations = new ArrayList<>();
+                            emptyFirstOrganizations.add(Organization.EMPTY);
+                            if (orgSection != null) {
+                                for (Organization org : orgSection.getOrganizations()) {
+                                    List<Organization.Position> emptyFirstPositions = new ArrayList<>();
+                                    emptyFirstPositions.add(Organization.Position.EMPTY);
+                                    emptyFirstPositions.addAll(org.getPositions());
+                                    emptyFirstOrganizations.add(new Organization(org.getHomePage(), emptyFirstPositions));
+                                }
+                            }
+                            section = new OrganizationSection(emptyFirstOrganizations);
+                            break;
+                    }
+                    r.setSection(type, section);
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
@@ -110,10 +158,5 @@ public class ResumeServlet extends HttpServlet {
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(request, response);
-    }
-
-    public boolean isActionOfAdding(HttpServletRequest request) {
-        String action = request.getParameter("action");
-        return "add".equals(action);
     }
 }

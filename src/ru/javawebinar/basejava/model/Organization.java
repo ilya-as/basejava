@@ -11,24 +11,25 @@ import java.util.*;
 import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Experience implements Serializable {
+public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
+    public static final Organization EMPTY = new Organization("", "", Position.EMPTY);
 
     private Link homePage;
-    private List<ExperienceList> positions = new ArrayList<>();
+    private List<Position> positions = new ArrayList<>();
 
-    public Experience() {
+    public Organization() {
     }
 
-    public Experience(String name, String url, ExperienceList... positions) {
+    public Organization(String name, String url, Position... positions) {
         this(new Link(name, url), Arrays.asList(positions));
     }
 
-    public Experience(String name, String url, List<ExperienceList> positions) {
+    public Organization(String name, String url, List<Position> positions) {
         this(new Link(name, url), positions);
     }
 
-    public Experience(Link homePage, List<ExperienceList> positions) {
+    public Organization(Link homePage, List<Position> positions) {
         this.homePage = homePage;
         this.positions = positions;
     }
@@ -37,7 +38,7 @@ public class Experience implements Serializable {
         return homePage;
     }
 
-    public List<ExperienceList> getPositions() {
+    public List<Position> getPositions() {
         return positions;
     }
 
@@ -45,7 +46,7 @@ public class Experience implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Experience that = (Experience) o;
+        Organization that = (Organization) o;
         return Objects.equals(homePage, that.homePage) &&
                 Objects.equals(positions, that.positions);
     }
@@ -58,39 +59,42 @@ public class Experience implements Serializable {
 
     @Override
     public String toString() {
-        return "Experience{" +
+        return "Organization{" +
                 "homePage=" + homePage +
                 ", positions=" + positions +
                 '}';
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static class ExperienceList implements Serializable {
+    public static class Position implements Serializable {
+
+        public static final Position EMPTY = new Position();
+
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate dataFrom;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate dataTo;
         private String description;
-        private String position;
+        private String title;
 
-        public ExperienceList(LocalDate dataFrom, LocalDate dataTo, String description, String position) {
+        public Position(LocalDate dataFrom, LocalDate dataTo, String description, String title) {
             Objects.requireNonNull(dataFrom, "dataFrom must not be null");
             Objects.requireNonNull(dataTo, "dataTo must not be null");
-            Objects.requireNonNull(position, "position must not be null");
+            Objects.requireNonNull(title, "title must not be null");
             this.dataFrom = dataFrom;
             this.dataTo = dataTo;
             this.description = description;
-            this.position = position;
+            this.title = title;
         }
 
-        public ExperienceList() {
+        public Position() {
         }
 
-        public LocalDate getDataFrom() {
+        public LocalDate getStartDate() {
             return dataFrom;
         }
 
-        public LocalDate getDataTo() {
+        public LocalDate getEndDate() {
             return dataTo;
         }
 
@@ -98,34 +102,34 @@ public class Experience implements Serializable {
             return description;
         }
 
-        public String getPosition() {
-            return position;
+        public String getTitle() {
+            return title;
         }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            ExperienceList that = (ExperienceList) o;
+            Position that = (Position) o;
             return Objects.equals(dataFrom, that.dataFrom) &&
                     Objects.equals(dataTo, that.dataTo) &&
                     Objects.equals(description, that.description) &&
-                    Objects.equals(position, that.position);
+                    Objects.equals(title, that.title);
         }
 
         @Override
         public int hashCode() {
 
-            return Objects.hash(dataFrom, dataTo, description, position);
+            return Objects.hash(dataFrom, dataTo, description, title);
         }
 
         @Override
         public String toString() {
-            return "ExperienceList{" +
+            return "Position{" +
                     "dataFrom=" + dataFrom +
                     ", dataTo=" + dataTo +
-                    ", description='" + description + '\'' +
-                    ", position='" + position + '\'' +
+                    ", content='" + description + '\'' +
+                    ", title='" + title + '\'' +
                     '}';
         }
     }

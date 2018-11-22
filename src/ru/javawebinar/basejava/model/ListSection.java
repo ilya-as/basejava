@@ -9,29 +9,30 @@ import javax.xml.bind.annotation.XmlAccessorType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ListSection extends Section {
 
-    private List<String> descriptions;
+    private List<String> items;
     private static final long serialVersionUID = 1L;
+    public static final ListSection EMPTY = new ListSection("");
 
     public ListSection() {
     }
 
-    public ListSection(String... descriptions) {
-        this(Arrays.asList(descriptions));
+    public ListSection(String... items) {
+        this(Arrays.asList(items));
     }
 
-    public ListSection(List<String> descriptions) {
-        Objects.requireNonNull(descriptions, "descriptions must not be null");
-        this.descriptions = descriptions;
+    public ListSection(List<String> items) {
+        Objects.requireNonNull(items, "items must not be null");
+        this.items = items;
     }
 
-    public List<String> getDescriptions() {
-        return descriptions;
+    public List<String> getItems() {
+        return items;
     }
 
     @Override
     public String toString() {
         return "ListSection{" +
-                "descriptions=" + descriptions.toString() +
+                "items=" + items.toString() +
                 '}';
     }
 
@@ -40,12 +41,12 @@ public class ListSection extends Section {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ListSection that = (ListSection) o;
-        return Objects.equals(descriptions, that.descriptions);
+        return Objects.equals(items, that.items);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(descriptions);
+        return Objects.hash(items);
     }
 }

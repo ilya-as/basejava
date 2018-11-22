@@ -1,4 +1,6 @@
-<%@ page import="ru.javawebinar.basejava.model.*" %>
+<%@ page import="ru.javawebinar.basejava.model.ContactType" %>
+<%@ page import="ru.javawebinar.basejava.model.ListSection" %>
+<%@ page import="ru.javawebinar.basejava.model.OrganizationSection" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
 <%@ page import="ru.javawebinar.basejava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -13,132 +15,80 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
-    <c:set var="action" scope="request" value="${param.action}"/>
-    <c:choose>
-        <c:when
-                test="${action eq 'add'}"><h2>Add resume</h2>
-        </c:when>
-        <c:otherwise>
-            <h2>Edit resume</h2>
-        </c:otherwise>
-    </c:choose>
-    <form method="post" action="resume" enctype="application/x-www-form-urlencoded" id="editOrAdd">
+    <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="uuid" value="${resume.uuid}">
-        <input type="hidden" name="action" value=${action}>
+        <h1>Имя:</h1>
         <dl>
-            <dt>Name:</dt>
-            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
+            <input type="text" name="fullName" size=55 value="${resume.fullName}">
         </dl>
-
-        <h3>Контакты:</h3>
+        <h2>Контакты:</h2>
         <c:forEach var="type" items="<%=ContactType.values()%>">
             <dl>
                 <dt>${type.title}</dt>
                 <dd><input type="text" name="${type.name()}" size=30 value="${resume.getContact(type)}"></dd>
             </dl>
         </c:forEach>
-        <h3>Секции:</h3>
-
-        <dl>
-            <c:forEach var="contentType" items="<%=SectionType.values()%>">
-                <c:choose>
-
-                    <c:when test="${contentType eq 'PERSONAL' || contentType eq 'OBJECTIVE'}">
-
-                        <h4>${contentType.name()}</h4>
-                        <c:set var="textContent" value="${resume.getSection(contentType)}" scope="request"/>
-                        <c:if test="${not empty textContent}">
-                            <jsp:useBean id="items"
-                                         class="ru.javawebinar.basejava.model.TextSection"/>
-                            <dd><textarea name='${contentType.name()}' cols=75 rows=5
-                                          form="editOrAdd">${textContent.description}</textarea>
+        <hr>
+        <c:forEach var="type" items="<%=SectionType.values()%>">
+            <c:set var="section" value="${resume.getSection(type)}"/>
+            <jsp:useBean id="section" type="ru.javawebinar.basejava.model.Section"/>
+            <h2><a>${type.title}</a></h2>
+            <c:choose>
+                <c:when test="${type=='OBJECTIVE'}">
+                    <input type='text' name='${type}' size=75 value='<%=section%>'>
+                </c:when>
+                <c:when test="${type=='PERSONAL'}">
+                    <textarea name='${type}' cols=75 rows=5><%=section%></textarea>
+                </c:when>
+                <c:when test="${type=='QUALIFICATIONS' || type=='ACHIEVEMENT'}">
+                    <textarea name='${type}' cols=75
+                              rows=5><%=String.join("\n", ((ListSection) section).getItems())%></textarea>
+                </c:when>
+                <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
+                    <c:forEach var="org" items="<%=((OrganizationSection) section).getOrganizations()%>"
+                               varStatus="counter">
+                        <dl>
+                            <dt>Название учереждения:</dt>
+                            <dd><input type="text" name='${type}' size=100 value="${org.homePage.name}"></dd>
+                        </dl>
+                        <dl>
+                            <dt>Сайт учереждения:</dt>
+                            <dd><input type="text" name='${type}url' size=100 value="${org.homePage.url}"></dd>
                             </dd>
-                        </c:if>
-                        <c:if test="${empty textContent}">
-                            <dd><textarea name='${contentType.name()}' cols=75 rows=5 form="editOrAdd"></textarea></dd>
-                        </c:if>
-                    </c:when>
-
-                    <c:when test="${contentType eq 'ACHIEVEMENT' || contentType eq 'QUALIFICATIONS'}">
-                        <c:set var="listContent" value="${resume.getSection(contentType)}" scope="page"/>
-                        <h4>${contentType.name()}</h4>
-                        <c:if test="${not empty listContent}">
-                            <jsp:useBean id="listContent"
-                                         class="ru.javawebinar.basejava.model.ListSection"/>
-                            <dd> <textarea name='${type}' cols=75
-                                      rows=5><%=String.join("\n", listContent.getDescriptions())%></textarea></dd>
-                        </c:if>
-                        <c:if test="${empty listContent}">
-                            <dd><textarea name='${contentType.name()}' cols=75 rows=5 form="editOrAdd"></textarea></dd>
-                        </c:if>
-                    </c:when>
-
-                    <c:when test="${contentType eq 'EXPERIENCE' || contentType eq 'EDUCATION'}">
-                        <h4>${contentType.name()} </h4>
-                        <p>
-                        <c:set var="organizationContent" scope="request" value="${resume.sections.get(contentType)}"/>
-                        <jsp:useBean id="organizationContent" scope="request"
-                                     class="ru.javawebinar.basejava.model.ExperienceSection"/>
-                        <c:forEach var="organization" items="${organizationContent.experiencesList}"
-                                   varStatus="counter">
-                            <dl>
-                                <dt>Name</dt>
-                                <dd><input type="text" name="${contentType.name()}" size=30
-                                           value="${organization.homePage.name}" required></dd>
-                            </dl>
-                            <dl>
-                                <dt>URL</dt>
-                                <dd><input type="text" name="${contentType.name()}${counter.index}url" size=30
-                                           value="${organization.homePage.url}"></dd>
-                            </dl>
-                            <br>
-                            <c:forEach var="position" items="${organization.positions}">
-                                <jsp:useBean id="position"
-                                             type="ru.javawebinar.basejava.model.Experience.ExperienceList"/>
-                                <p>
+                        </dl>
+                        <br>
+                        <div style="margin-left: 30px">
+                            <c:forEach var="pos" items="${org.positions}">
+                                <jsp:useBean id="pos" type="ru.javawebinar.basejava.model.Organization.Position"/>
                                 <dl>
-                                    <dt>Position</dt>
-                                    <dd><input type="text" name="${contentType.name()}${counter.index}pos" size=30
-                                               value="${position.description}"
-                                               required></dd>
+                                    <dt>Начальная дата:</dt>
+                                    <dd>
+                                        <input type="text" name="${type}${counter.index}startDate" size=10
+                                               value="<%=DateUtil.format(pos.getStartDate())%>" placeholder="MM/yyyy">
+                                    </dd>
                                 </dl>
                                 <dl>
-                                    <dt>Start</dt>
-                                    <dd><input type="text" required name="${contentType.name()}${counter.index}start"
-                                               size=30
-                                               value="<%=DateUtil.format(position.getDataFrom())%>"
-                                               placeholder="MM/yyyy"></dd>
+                                    <dt>Конечная дата:</dt>
+                                    <dd>
+                                        <input type="text" name="${type}${counter.index}endDate" size=10
+                                               value="<%=DateUtil.format(pos.getEndDate())%>" placeholder="MM/yyyy">
                                 </dl>
                                 <dl>
-                                    <dt>End</dt>
-                                    <c:choose>
-                                        <c:when test="<%=position.getDataTo()!=null && position.getDataTo().isEqual(DateUtil.NOW)%>">
-                                            <dd><input type="text" name="${contentType.name()}${counter.index}end"
-                                                       size=30
-                                                       value=""
-                                                       placeholder="MM/yyyy"></dd>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <dd><input type="text" name="${contentType.name()}${counter.index}end"
-                                                       size=30
-                                                       value="<%=DateUtil.format(position.getDataTo())%>"
-                                                       placeholder="MM/yyyy"></dd>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <dt>Должность:</dt>
+                                    <dd><input type="text" name='${type}${counter.index}title' size=75
+                                               value="${pos.title}">
                                 </dl>
                                 <dl>
-                                    <dt>Description</dt>
-                                    <dd><textarea name='${contentType.name()}${counter.index}des' cols=75 rows=5
-                                                  form="editOrAdd">${position.description}</textarea>
+                                    <dt>Описание:</dt>
+                                    <dd><textarea name="${type}${counter.index}description" rows=5
+                                                  cols=75>${pos.description}</textarea></dd>
                                 </dl>
                             </c:forEach>
-                            <br>
-                        </c:forEach>
-                    </c:when>
-                </c:choose>
-            </c:forEach>
-        </dl>
-        <hr>
+                        </div>
+                    </c:forEach>
+                </c:when>
+            </c:choose>
+        </c:forEach>
         <button type="submit">Сохранить</button>
         <button onclick="window.history.back()">Отменить</button>
     </form>
@@ -146,4 +96,3 @@
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
-
