@@ -5,37 +5,37 @@ public enum ContactType {
     SKYPE("Skype: ") {
         @Override
         public String toHtml0(String value) {
-            return getTitle() + ": " + toLink("skype:" + value, value);
+            return getTitle() + " " + toLink("skype:" + value, value);
         }
     },
     EMAIL("Почта: ") {
         @Override
         public String toHtml0(String value) {
-            return getTitle() + ": " + toLink("mailto:" + value, value);
+            return getTitle() + " " + toLink("mailto:" + value, value);
         }
     },
     LINDEDIN("Профиль Linkedin: ") {
         @Override
         public String toHtml0(String value) {
-            return toLink(value);
+            return getTitle() + " " + toLink("URL:" + value, value);
         }
     },
     GITHUB("Профиль Github: ") {
         @Override
         public String toHtml0(String value) {
-            return toLink(value);
+            return getTitle() + " " + toLink("URL:" + value, value);
         }
     },
     STACKOVERFLOW("Профиль Stackoverflow: ") {
         @Override
         public String toHtml0(String value) {
-            return toLink(value);
+            return getTitle() + " " + toLink("URL:" + value, value);
         }
     },
     HOMEPAGE("Домашняя страница: ") {
         @Override
         public String toHtml0(String value) {
-            return toLink(value);
+            return getTitle() + " " + toLink("URL:" + value, value);
         }
     };
 
